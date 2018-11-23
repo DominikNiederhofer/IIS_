@@ -32,7 +32,7 @@ class User extends Authenticatable
     }
 
     public function courses() {
-        return $this->belongsToMany(System\Course);
+        return $this->belongsToMany(Course::class);
     }
 
     public function questions() {

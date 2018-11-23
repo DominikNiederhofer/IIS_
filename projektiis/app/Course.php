@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
+	protected $fillable = [
+        'name', 'shortcut', 'credits' ,'type'
+    ];
+
     public function users() {
-        return $this->belongsToMany(System\User);
+        return $this->belongsToMany(User::class);
     }
 
     public function exams() {
