@@ -4,6 +4,7 @@ namespace System\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use System\User;
 
 class HomeController extends Controller
 {

@@ -18,7 +18,7 @@ class CreateExamsTable extends Migration
             $table->enum('type', ['half', 'final']);
             $table->integer('max_students');
             $table->integer('max_points');
-            $table->integer('course_id')->references('id')->on('courses');      
+            $table->integer('course_id')->nullable();
             $table->timestamps();
         });
     }

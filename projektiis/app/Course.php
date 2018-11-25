@@ -3,6 +3,7 @@
 namespace System;
 
 use Illuminate\Database\Eloquent\Model;
+use System\User;
 
 class Course extends Model
 {
@@ -17,4 +18,5 @@ class Course extends Model
     public function exams() {
         return $this->hasMany(Exam::class);
     }
+
 }

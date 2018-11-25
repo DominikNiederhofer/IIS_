@@ -51,11 +51,10 @@ class UserTableSeeder extends Seeder
         $student->password = bcrypt('student');
         $student->save();
         $student->roles()->attach($role_student);
-        $student->courses()->attach($course_phy);
+        //$student->courses()->attach($course_phy);
         $student->courses()->attach($course_mat);
         $student->courses()->attach($course_pro);
         $student->courses()->attach($course_czl);
-        $student->courses()->attach($course_ase);
 
     }
 }

@@ -29,6 +29,9 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 
 Route::resource('users', 'UsersController');
+
+Route::resource('teacher', 'TeacherController');
+
 Route::resource('roles', 'RolesController');
 Route::resource('courses', 'CoursesController');
 Route::resource('evaluations', 'EvaluationsController');
