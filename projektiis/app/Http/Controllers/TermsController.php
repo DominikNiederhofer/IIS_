@@ -4,6 +4,9 @@ namespace System\Http\Controllers;
 
 use System\Term;
 use Illuminate\Http\Request;
+use System\Course;
+use System\Exam;
+use Auth;
 
 class TermsController extends Controller
 {
@@ -81,5 +84,22 @@ class TermsController extends Controller
     public function destroy(Term $term)
     {
         //
+    }
+
+    public function register($id, $term_id) {
+
+        $term = Term::where('id', $term_id)->first();
+        $exam = Exam::where('id', $id)->first();
+        if ($exam == null) {
+            return redirect()->route('courses');
+        }
+        if ($exam->max_students > $term->users()->get()->count() &&
+            $term->close > \Carbon\Carbon::now() && $term->open < \Carbon\Carbon::now()) {
+            $term->users()->attach(Auth::user());
+        }
+
+        $course = Course::find($id);
+        return redirect()->route('courses.show', compact('course'));
+
     }
 }

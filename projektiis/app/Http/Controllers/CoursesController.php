@@ -47,11 +47,26 @@ class CoursesController extends Controller
      * @param  \System\Course  $course
      * @return \Illuminate\Http\Response
      */
+    public function teacher_show(Course $course){
+        
+        $course = Course::find($course->id);
+        return view('teacher.show', compact('course'));
+    }
+
+    public function teacher_index(){
+        $courses = Course::all();
+            //return view('courses.index', ['courses' => $courses]);
+        return view('teacher.index', compact('courses'));
+        
+    }
+
+
     public function show(Course $course)
     {
         //$course = Course::where('id', $course->id);
         $course = Course::find($course->id);
         return view('courses.show', compact('course'));
+        
     }
 
     /**

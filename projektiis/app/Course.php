@@ -19,4 +19,16 @@ class Course extends Model
         return $this->hasMany(Exam::class);
     }
 
+    public function students() {
+
+        $users = $this->users()->get();
+        $students = array();
+        foreach ($users as $person) {
+            if ($person->hasRole('student')) {
+                $students[] = $person;
+            }
+        }
+        return $students;
+    }
+
 }

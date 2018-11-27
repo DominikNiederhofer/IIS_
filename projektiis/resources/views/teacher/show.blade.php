@@ -27,11 +27,7 @@
                       <td>{{$term->term}}</td>
                       <td>0</td>
                       <td>{{$term->registration()}}</td>
-                      @if (Auth::user()->hasRole('student'))
-                        <td><form class="form-horizontal" method="post" action="{{route('terms_register', [$exam->id, $term->id])}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">Register</button></form></td> 
-                      @elseif (Auth::user()->hasRole('teacher'))
-                         <td><form class="form-horizontal" method="post" action="{{route('terms_valuate', [$exam->id, $term->id])}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">Rate students</button></form></td>
-                      @endif                  
+                                          
                     </tr>
                   @endforeach          
               </div>

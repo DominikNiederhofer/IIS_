@@ -15,7 +15,7 @@ class CreateTermsTable extends Migration
     {
         Schema::create('terms', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('exam_id');
+            $table->integer('exam_id')->nullable();
             $table->timestamp('open')->nullable();
             $table->timestamp('close')->nullable();
             $table->timestamp('term')->nullable();

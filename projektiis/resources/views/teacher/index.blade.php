@@ -14,8 +14,8 @@
 			  	<span class="badge badge-primary">Rests</span></li>
 		  	@foreach($user->courses as $course)
 			  	<li class="list-group-item"><span class="col col-xs-1">{{$course->shortcut}} </span>
-			  		<a class="col-xs-4" href="/teacher/show">{{$course->name}}</a>
-			  		<span class="col-xs-offset-2">{{count($course->users()->get())}} </span>
+			  		<a class="col-xs-4" href="courses/{{$course->id}}">{{$course->name}}</a>
+			  		<span class="col-xs-offset-2">{{count($course->students())}} </span>
 			  	<span class="badge badge-primary">0</span></li> 
 	        @endforeach
 	     @endif
