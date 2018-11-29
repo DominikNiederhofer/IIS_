@@ -15,7 +15,7 @@ class CoursesController extends Controller
     public function index()
     {
         //
-        $courses = Course::all();
+        $courses = Auth::user()->courses()->get();
         //return view('courses.index', ['courses' => $courses]);
         return view('courses.index', compact('courses'));
     }

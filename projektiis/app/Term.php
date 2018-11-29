@@ -34,4 +34,19 @@ class Term extends Model
         return "starts ".$this->open;
     }
    }
+
+   public function isEnded(){
+    $now = date("Y-m-d h:i:s");
+    if ($this->close < $now)
+        return true;
+    return false;
+   }
+
+   public function isregistrated($user){
+        if ($this->users()->find($user->id) == null) {
+            return false;
+        }
+        return true;
+   }
+
 }

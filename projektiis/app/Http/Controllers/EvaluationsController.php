@@ -4,6 +4,9 @@ namespace System\Http\Controllers;
 
 use System\Evaluation;
 use Illuminate\Http\Request;
+use System\User;
+use System\Term;
+
 
 class EvaluationsController extends Controller
 {
@@ -12,9 +15,11 @@ class EvaluationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($exam_id, $term_id)
     {
-        //
+        $term = Term::where('id', $term_id)->first();
+        $users = $term->users()->get();
+        return view('evaluations.index', ['users' => $users]);
     }
 
     /**
@@ -24,7 +29,7 @@ class EvaluationsController extends Controller
      */
     public function create()
     {
-        //
+        return view('evaluations.create');
     }
 
     /**
@@ -35,7 +40,16 @@ class EvaluationsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'points' => 'required|integer|min:0',
+            'comment' => 'required|string',
+        ]);
+        $evaluation1 = new Evaluation();
+        $evaluation1->points = $request->points;
+        $evaluation1->comment = $request->comment;
+        $evaluation1->save();
+
+        Auth::user()->evaluations()->attach($evaluation1);
     }
 
     /**
