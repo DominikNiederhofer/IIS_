@@ -22,9 +22,11 @@
             </tr>
               @foreach($course->exams as $exam)
               <div>
-                  <tr><td colspan="5" class="h3">{{$exam->type}} test</td>
+                  <tr><td colspan="4" class="h3">{{$exam->type}} test</td>
                     @if (Auth::user()->hasRole('teacher'))
-                      <td><form class="form-horizontal danger" method="get" action="{{route('terms_create', $exam->id)}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">Create term</button></form>
+                      <td><form class="form-horizontal danger" method="get" action="{{route('terms_create', [$exam->id, $course->id])}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">Create term</button></form>
+                      </td>
+                      <td><form class="form-horizontal danger" method="post" action="{{route('exams_destroy', $exam)}}">{{ csrf_field() }} {{ method_field('DELETE') }}<button type="submit" class="btn btn-primary">Delete</button></form>
                       </td>
                     @endif
                   </tr>
@@ -39,7 +41,11 @@
                           @if ($term->isregistrated(Auth::user()))
                             <div>
                               @if ($term->isEnded())
-                                <form class="form-horizontal" method="post" action="{{route('')}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">View valuate</button></form>
+                              <div>
+                                @if($term->hasValuate(Auth::user()))
+                                <form class="form-horizontal" method="get" action="{{route('valuate_show', $exam->id)}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">Show ratings</button></form>
+                                @endif
+                                </div>
                               @else
                                 <form class="form-horizontal" method="post" action="{{route('terms_unregister', [Auth::user(), $term->id])}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">UnRegister</button></form>
                               @endif
@@ -53,7 +59,7 @@
                           @endif
                         </td> 
                       @elseif (Auth::user()->hasRole('teacher'))
-                         <td><form class="form-horizontal" method="get" action="{{route('terms_valuate', [$exam->id, $term->id])}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">Rate students</button></form></td>
+                         <td><form class="form-horizontal" method="get" action="{{route('terms_valuate', $term->id)}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">Rate students</button></form></td>
                          <td><form class="form-horizontal" method="post" action="{{route('terms_destroy', $term->id)}}">{{ csrf_field() }} {{ method_field('DELETE') }}<button type="submit" class="btn btn-primary">Delete</button></form></td>
                       @endif                  
                     </tr>

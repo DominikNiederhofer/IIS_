@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use System\Term;
 use System\Course;
+use System\User;
 
 class TermTableSeeder extends Seeder
 {
@@ -25,11 +26,15 @@ class TermTableSeeder extends Seeder
 
         $exam_mat_half->terms()->save($term1);
 
-		$term2 = new Term();
+        $term2 = new Term();
         $term2->open = '2018-11-16 15:00:00';
-        $term2->close = '2018-11-17 16:00:00';
-        $term2->term  = '2018-11-18 12:00:00';
+        $term2->close = '2018-11-30 16:00:00';
+        $term2->term  = '2018-12-02 12:00:00';
         $term2->save();
+
+        $user_stud = User::where('username', 'student')->first();
+        $term1->users()->attach($user_stud);
+
 
         $exam_mat_half->terms()->save($term2);
 

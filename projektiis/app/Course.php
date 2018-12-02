@@ -30,5 +30,17 @@ class Course extends Model
         }
         return $students;
     }
+    
+    public function teachers() {
+
+        $users = $this->users()->get();
+        $teachers = array();
+        foreach ($users as $person) {
+            if ($person->hasRole('teacher')) {
+                $teachers[] = $person;
+            }
+        }
+        return $teachers;
+    }
 
 }

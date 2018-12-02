@@ -25,10 +25,11 @@ class TermsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($exam_id)
+    public function create($exam_id, $course_id)
     {
+        $course = Course::where('id', $course_id)->first();
         $exam = Exam::where('id', $exam_id)->first();
-        return view('terms.create', ['exam' => $exam]);
+        return view('terms.create', ['exam' => $exam])->with(['course' => $course]);
     }
 
     /**
@@ -37,7 +38,7 @@ class TermsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request, $exam_id, $course_id)
     {
         $this->validate($request, ['term' => 'required|date',
             'open' => 'required|date',
@@ -49,11 +50,10 @@ class TermsController extends Controller
         $new_term->close = $request->close;
         $new_term->save();
 
-        $exam = Exam::find($id)->first();
+        $exam = Exam::where('id', $exam_id)->first();
         $exam->terms()->save($new_term);
-        /////DODELAT!!!!
-        $course  = Course::find(1);
-        return redirect()->route('courses.show', ['course' => $course->id]);    
+        
+        return redirect()->route('course_show', ['course' => $course_id]);    
     }
 
     /**

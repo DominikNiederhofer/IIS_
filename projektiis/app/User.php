@@ -40,7 +40,7 @@ class User extends Authenticatable
     }
 
     public function evaluations() {
-        return $this->belongsToMany(System\Evaluation);
+        return $this->belongsToMany(Evaluation::class);
     }
 
     public function terms() {
@@ -56,11 +56,32 @@ class User extends Authenticatable
     }
 
     public function hasAnyRole($roles){
-        return null !== $this->roles()->whereIn('name', $roles)->first();
+        if (is_array($roles)) {
+            foreach ($roles as $role) {
+                if ($this->hasRole($role)) {
+                    return true;
+                }
+            }
+        } else {
+            return $this->hasRole($roles);
+        }
+        return false;
     }
 
     public function hasRole($role){
         return null !== $this->roles()->where('name', $role)->first();
     }
 
+    public function whatRole(){
+
+        if (null != $this->roles()->where('name', 'admin')->first()) {
+            return 'admin';
+        } else if (null != $this->roles()->where('name', 'teacher')->first()) {
+            return 'teacher';
+        } else if (null != $this->roles()->where('name', 'student')->first()) {
+            return 'student';
+        } else {
+            return "";
+        }
+    }
 }

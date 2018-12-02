@@ -6,15 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
-    public function users() {
-        return $this->belongsTo(System\User);
-    }
+	protected $fillable = [
+        'points'
+    ];
 
     public function evaluations() {
-        return $this->belongsTo(System\Evaluation);
-    }
-
-    public function terms() {
-        return $this->belongsTo(System\Term);
+        return $this->belongsTo(Evaluation::class);
     }
 }

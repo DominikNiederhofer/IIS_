@@ -25,6 +25,7 @@ class UserTableSeeder extends Seeder
         $course_czl = Course::where('name', 'Czech language')->first();
         $course_ase = Course::where('name', 'Assemblers')->first();
 
+
         $admin = new User();
         $admin->name = 'admin';
         $admin->email = 'admin@admin.com';

@@ -16,6 +16,8 @@ class CreateEvaluationsTable extends Migration
         Schema::create('evaluations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('points');
+            $table->integer('teacher_id')->nullable();
+            $table->integer('term_id')->nullable();
             $table->longText('comment')->nullable();
             $table->timestamps();
         });

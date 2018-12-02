@@ -11,9 +11,8 @@
      				<th>Username</th>
      				<th>Name</th>
      				<th>Email</th>
-     				<td><input type="integer" name="numberofquestions">
-            number of questions</input></td>
-            <td><form class="form-horizontal" method="post" action="{{route('questions_create')}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">ok</button></form></td>
+     				<th></th>
+            <th></th>
      			</tr>
 		      @foreach($users as $user)
 		      	<tr>
@@ -21,7 +20,14 @@
 		      		<td>{{$user->name}}</td>
               <td>{{$user->email}}</td>
               <td></td>
-              <td><form class="form-horizontal" method="get" action="{{route('valuate_create')}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">open</button></form></td>
+              <td>
+                <div>
+                  @if ($term->hasValuate($user))
+                    <form class="form-horizontal" method="get" action="{{route('valuate_edit', $term->id)}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">edit</button></form></td>
+                  @else
+                    <form class="form-horizontal" method="get" action="{{route('valuate_create', [$user->id, $term->id])}}">{{ csrf_field() }}<button type="submit" class="btn btn-primary">open</button></form></td>
+                  @endif
+                </div>
 		      	</tr>
 		      @endforeach
       		</body>

@@ -4,7 +4,7 @@ namespace System\Http\Controllers;
 
 use System\Exam;
 use System\Course;
-
+use System\Term;
 use Illuminate\Http\Request;
 
 
@@ -53,7 +53,7 @@ class ExamsController extends Controller
         $course = Course::where('id', $id)->first();
         $course->exams()->save($new_exam);
 
-        return redirect()->route('courses.show', ['course' => $id]);
+        return redirect()->route('course_show', ['course' => $id]);
     }
 
     /**
@@ -98,6 +98,7 @@ class ExamsController extends Controller
      */
     public function destroy(Exam $exam)
     {
-        //
+        $exam->delete();
+        return back();
     }
 }

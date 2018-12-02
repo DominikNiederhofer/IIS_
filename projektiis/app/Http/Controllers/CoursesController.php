@@ -2,8 +2,11 @@
 
 namespace System\Http\Controllers;
 
-use System\Course;
+use Auth;
 use Illuminate\Http\Request;
+use System\Course;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class CoursesController extends Controller
 {
@@ -14,10 +17,12 @@ class CoursesController extends Controller
      */
     public function index()
     {
-        //
-        $courses = Auth::user()->courses()->get();
-        //return view('courses.index', ['courses' => $courses]);
-        return view('courses.index', compact('courses'));
+        if(Auth::user()->hasRole('admin')) {
+            $courses = Course::orderBy('name')->get();
+        } else {
+            $courses = Auth::user()->courses()->get();
+        }
+            return view('courses.index', compact('courses'));
     }
 
     /**
@@ -27,7 +32,7 @@ class CoursesController extends Controller
      */
     public function create()
     {
-        //
+        return view('courses.create');
     }
 
     /**
@@ -38,7 +43,22 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+       $this->validate($request, [
+           'name' => 'required|string',
+           'credits' => 'required|integer|max:100',
+            'shortcut' => 'required|string',
+            'type' => 'required|string',
+        ]);
+
+        $course1 = new Course();
+        $course1->name = $request->name;
+        $course1->shortcut = $request->shortcut;
+        $course1->credits = $request->credits;
+        $course1->type = $request->type;
+        $course1->save();
+
+        return $this->index();
     }
 
     /**
@@ -75,9 +95,10 @@ class CoursesController extends Controller
      * @param  \System\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function edit(Course $course)
+    public function edit($course_id)
     {
-        //
+        $course = Course::find($course_id);
+        return view('courses.edit', ['course' => $course]);
     }
 
     /**
@@ -87,9 +108,22 @@ class CoursesController extends Controller
      * @param  \System\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Course $course)
+    public function update(Request $request, $course_id)
     {
-        //
+        $this->validate($request, [
+        'name' => 'required|string|max:150',
+        'credits' => 'required|integer|max:100',
+        'type' => 'required|string|max:3',
+        ]);
+
+        $course1 = Course::find($course_id);
+        $course1->name = $request->name;
+        $course1->credits = $request->credits;
+        $course1->type = $request->type;
+        $course1->shortcut = $request->shortcut;
+        $course1->save();
+
+        return $this->index();
     }
 
     /**
@@ -98,8 +132,11 @@ class CoursesController extends Controller
      * @param  \System\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Course $course)
+    public function destroy($course_id)
     {
-        //
+        $course = Course::where('id', $course_id)->first();
+        $course->delete();
+        return $this->index();
     }
+
 }

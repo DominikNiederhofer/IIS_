@@ -5,7 +5,7 @@
   <div class="panel panel-primary">
     <div class="panel-heading">Insert result</div>
     <div class="panel-body">
-    	<form class="form-horizontal" method="post" action="{{route('valuate_store')}}" enctype="multipart/form-data">{{ csrf_field() }}
+    	<form class="form-horizontal" method="post" action="{{route('valuate_store', [$user->id, $term->id])}}" enctype="multipart/form-data">{{ csrf_field() }}
      	<table class="table list-group">
      		<body>
      			<tr>
@@ -13,15 +13,18 @@
      				<th>Comment</th>
      			</tr>
      			<tr>
-     				<div class="form-group">
-     					<td><input type="integer" name="points" class="form-control" autofocus></td>
-     				</div>
-					<div class="form-group">
-     					<td><input type="text" name="comment" class="form-control" autofocus></td>
-     				</div>
+     				<td>
+     					<div class="form-group">
+     						<input type="integer" name="points" class="form-control" autofocus>
+     					</div>
+     				</td>
+					<td>
+						<div class="form-group">
+     						<input type="text" name="comment" class="form-control" autofocus>
+     					</div>
+     				</td>
      			</tr>
      			<tr>
-     				<td></td>
      				<td>
      					<button type="submit" class="btn btn-primary">save</button>
      				</td>
@@ -31,8 +34,8 @@
      	</table>
      	</form>
   
-
     </div>      
+
   </div>
 </div>
 @endsection

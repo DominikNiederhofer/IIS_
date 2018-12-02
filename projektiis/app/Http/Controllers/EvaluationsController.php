@@ -2,11 +2,11 @@
 
 namespace System\Http\Controllers;
 
+use System\Term;
 use System\Evaluation;
 use Illuminate\Http\Request;
 use System\User;
-use System\Term;
-
+use Auth;
 
 class EvaluationsController extends Controller
 {
@@ -15,11 +15,11 @@ class EvaluationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($exam_id, $term_id)
+    public function index($term_id)
     {
         $term = Term::where('id', $term_id)->first();
         $users = $term->users()->get();
-        return view('evaluations.index', ['users' => $users]);
+        return view('evaluations.index', ['users' => $users])->with('term', $term);
     }
 
     /**
@@ -27,9 +27,12 @@ class EvaluationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($user_id, $term_id)
     {
-        return view('evaluations.create');
+        $user = User::where('id', $user_id)->first();
+        $term = Term::where('id', $term_id)->first();
+
+        return view('evaluations.create', ['user' => $user])->with('term', $term);
     }
 
     /**
@@ -38,8 +41,11 @@ class EvaluationsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $user_id, $term_id)
     {
+        $userin = User::where('id', $user_id)->first();
+        $term = Term::where('id', $term_id)->first();
+
         $this->validate($request, [
             'points' => 'required|integer|min:0',
             'comment' => 'required|string',
@@ -47,9 +53,14 @@ class EvaluationsController extends Controller
         $evaluation1 = new Evaluation();
         $evaluation1->points = $request->points;
         $evaluation1->comment = $request->comment;
+        $evaluation1->teacher_id = Auth::user()->id;
         $evaluation1->save();
 
-        Auth::user()->evaluations()->attach($evaluation1);
+        $evaluation1->users()->attach($userin);
+        $term->evaluations()->save($evaluation1);
+
+        $users = $term->users()->get();
+        return $this->index($term->id);
     }
 
     /**
@@ -58,9 +69,20 @@ class EvaluationsController extends Controller
      * @param  \System\Evaluation  $evaluation
      * @return \Illuminate\Http\Response
      */
-    public function show(Evaluation $evaluation)
+    public function show($term_id)
     {
-        //
+        $key = 0;
+        $term = Term::where('id', $term_id)->first();
+        $eval = Evaluation::where('term_id', $term_id)->get();
+        
+        foreach ($eval as $key) {
+            if ($key->users()->first() == Auth::user())
+                break;
+        }
+
+         return view('evaluations.show', ['evaluation' => $key]);
+
+        
     }
 
     /**
@@ -69,9 +91,17 @@ class EvaluationsController extends Controller
      * @param  \System\Evaluation  $evaluation
      * @return \Illuminate\Http\Response
      */
-    public function edit(Evaluation $evaluation)
+    public function edit($term_id)
     {
-        //
+        $key = 0;
+        $term = Term::where('id', $term_id)->first();
+        $eval = Evaluation::where('term_id', $term_id)->get();
+        foreach ($eval as $key) {
+            if ($key->users()->first() == Auth::user())
+                break;
+        }
+    
+       return view('evaluations.edit', ['evaluation' => $key, 'term' => $term]);        
     }
 
     /**
@@ -81,9 +111,20 @@ class EvaluationsController extends Controller
      * @param  \System\Evaluation  $evaluation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Evaluation $evaluation)
+    public function update(Request $request, $evaluation_id, $term_id)
     {
-        //
+        $term = Term::where('id', $term_id)->first();
+        $this->validate($request, [
+            'points' => 'required|integer|min:0',
+            'comment' => 'required|string',
+        ]);
+        $evaluation = Evaluation::find($evaluation_id);
+        $evaluation->points = $request->points;
+        $evaluation->comment = $request->comment;
+        $evaluation->teacher_id = Auth::user()->id;
+        $evaluation->save();
+
+        return $this->index($term->id);
     }
 
     /**

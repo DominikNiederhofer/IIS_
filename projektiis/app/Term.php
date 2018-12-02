@@ -3,11 +3,16 @@
 namespace System;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Term extends Model
 {
+    protected $fillable = [
+        'term', 'open', 'close'
+    ];
+
     public function evaluations() {
-        return $this->hasMany(System\Evaluation);
+        return $this->hasMany(Evaluation::class);
     }
 
     public function exams() {
@@ -48,5 +53,12 @@ class Term extends Model
         }
         return true;
    }
-
+   public function hasValuate($user){
+       $eval = $this->evaluations()->get();
+        foreach ($eval as $key) {
+           if ($key->users()->first()->id == $user->id)
+                return true;
+        }
+        return false;
+   }
 }
